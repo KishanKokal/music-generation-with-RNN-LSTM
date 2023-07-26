@@ -17,6 +17,7 @@ For training our neural network what we do is basically we pass in chunks of mus
 
 ## The music generator (inference)
 
+![Squence and notes](./assets/fig-2.png) <br>
 * We start with a seed melody
 * The model is going to give us a prediction. And, the prediction is going to be the next predicted notes in the music.
 * We take that and append it to the initial seed and re-feed that again to the model and we expect yet another prediction from the model which is the next in the sequence.
