@@ -1,0 +1,9 @@
+Abstract:
+We explore the application of Long Short-Term Memory (LSTM) Recurrent Neural Networks (RNNs) in the domain of music generation. LSTM networks have gained popularity in sequence modeling and are particularly useful for predicting the next output in a series. We focus on showcasing an approach to generating music using LSTM RNNs and discuss the challenges faced in this complex task. The study emphasizes the intuition, theory, and practical implementation of LSTM networks for music generation, aiming to contribute to the advancement of deep learning in the creative realm of music composition.
+
+Research Papers:
+Conner, Michael, et al. Music Generation Using an LSTM. arXiv, 22 Mar. 2022. arXiv.org, http://arxiv.org/abs/2203.12105.
+
+Mangal, Sanidhya, et al. ‘LSTM Based Music Generation System’. IARJSET, vol. 6, no. 5, May 2019, pp. 47–54. arXiv.org, https://doi.org/10.17148/IARJSET.2019.6508.
+
+Q. Lou, “Music Generation Using Neural Networks.” Accessed: Jul. 26, 2023. [Online]. Available: https://cs229.stanford.edu/proj2016/report/Lou-MusicGenerationUsingNeuralNetworks-report.pdf.
