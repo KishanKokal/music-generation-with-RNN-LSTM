@@ -1,7 +1,12 @@
 import os
 import music21 as m21
+import json
 
 DATASET_PATH = "deutschl/test"
+SAVE_DIR = "data"
+SINGLE_FILE_DATASET = "file_dataset"
+SEQUENCE_LENGTH = 64
+MAPPING_PATH = "mapping.json"
 ACCEPTABLE_DURATIONS = [
     0.25,
     0.5,
@@ -53,22 +58,85 @@ def transpose(song):
     return tranposed_song
 
 
+def encode_song(song, time_step=0.25):
+    # p = 60, d = 1.0 -> [60, "_", "_", "_"]
+    encoded_song = []
+
+    for event in song.flat.notesAndRests:
+        if isinstance(event, m21.note.Note):
+            symbol = event.pitch.midi
+        elif isinstance(event, m21.note.Rest):
+            symbol = "r"
+
+        # Convert the note/rest into time series notation
+        steps = int(event.duration.quarterLength / time_step)
+        for i in range(steps):
+            if i == 0:
+                encoded_song.append(symbol)
+            else:
+                encoded_song.append("_")
+
+    return " ".join(map(str, encoded_song))
+
+
 def preprocess(dataset_path):
     print("Loading songs...")
     songs = load_songs(dataset_path)
     print("Loaded {} songs.".format(len(songs)))
 
-    for song in songs:
+    for i, song in enumerate(songs):
         if not is_acceptable_song(song, ACCEPTABLE_DURATIONS):
             continue
 
         song = transpose(song)
 
+        encoded_song = encode_song(song)
+        save_path = os.path.join(SAVE_DIR, str(i))
+        with open(save_path, "w") as fp:
+            fp.write(encoded_song)
+
+
+def load(file_path):
+    with open(file_path, "r") as fp:
+        song = fp.read()
+        return song
+
+
+def create_single_file_dataset(dataset_path, file_dataset_path, sequence_length):
+    new_song_delimiter = "/ " * sequence_length
+    songs = ""
+
+    # Load encoded songs and add delimiters
+    for path, _, files in os.walk(dataset_path):
+        for file in files:
+            file_path = os.path.join(path, file)
+            song = load(file_path)
+            songs += song + " " + new_song_delimiter
+
+    songs = songs[:-1]
+
+    # Save string that contains all dataset
+    with open(file_dataset_path, "w") as fp:
+        fp.write(songs)
+
+    return songs
+
+
+def create_mapping(songs, mapping_path):
+    mappings = {}
+    # Identify the vocabulary
+    songs = songs.split()
+    vocabulary = list(set(songs))
+
+    # Create mappings
+    for i, symbol in enumerate(vocabulary):
+        mappings[symbol] = i
+
+    with open(mapping_path, "w") as fp:
+        json.dump(mappings, fp, indent=4)
+
 
 if __name__ == "__main__":
-    songs = load_songs(DATASET_PATH)
-    print("Loaded {} songs.".format(len(songs)))
-    song = songs[2]
-    transposed_song = transpose(song)
-    # song.show()
-    transposed_song.show()
+    preprocess(DATASET_PATH)
+    songs = create_single_file_dataset(SAVE_DIR, SINGLE_FILE_DATASET, SEQUENCE_LENGTH)
+    create_mapping(songs, MAPPING_PATH)
