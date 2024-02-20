@@ -1,8 +1,10 @@
 import os
 import music21 as m21
 import json
+import tensorflow.keras as keras
+import numpy as np
 
-DATASET_PATH = "deutschl/test"
+DATASET_PATH = "deutschl/erk"
 SAVE_DIR = "data"
 SINGLE_FILE_DATASET = "file_dataset"
 SEQUENCE_LENGTH = 64
@@ -26,6 +28,8 @@ def load_songs(dataset_path):
             if file[-3:] == "krn":
                 song = m21.converter.parse(os.path.join(dataset_path, file))
                 songs.append(song)
+    song = songs[3]
+    song.show()
     return songs
 
 
@@ -136,7 +140,41 @@ def create_mapping(songs, mapping_path):
         json.dump(mappings, fp, indent=4)
 
 
+def convert_songs_to_int(songs):
+    int_songs = []
+    # Load mappings
+    with open(MAPPING_PATH, "r") as fp:
+        mappings = json.load(fp)
+
+    # Map songs to int
+    songs = songs.split()
+    for symbol in songs:
+        int_songs.append(mappings[symbol])
+
+    return int_songs
+
+
+def generate_training_sequences(sequence_length):
+    songs = load(SINGLE_FILE_DATASET)
+    int_songs = convert_songs_to_int(songs)
+    num_sequences = len(int_songs) - sequence_length
+
+    inputs = []
+    targets = []
+
+    for i in range(num_sequences):
+        inputs.append(int_songs[i : i + sequence_length])
+        targets.append(int_songs[i + sequence_length])
+
+    vocabulary_size = len(set(int_songs))
+    inputs = keras.utils.to_categorical(inputs, num_classes=vocabulary_size)
+    targets = np.array(targets)
+
+    return inputs, targets
+
+
 if __name__ == "__main__":
     preprocess(DATASET_PATH)
     songs = create_single_file_dataset(SAVE_DIR, SINGLE_FILE_DATASET, SEQUENCE_LENGTH)
     create_mapping(songs, MAPPING_PATH)
+    inputs, targets = generate_training_sequences(SEQUENCE_LENGTH)
