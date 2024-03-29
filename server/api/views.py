@@ -3,17 +3,42 @@ from rest_framework.decorators import api_view
 import uuid
 from django.http import FileResponse
 import os
+import music21 as m21
+from package.melodyGenerator import MelodyGenerator
+from package.preprocess import (
+    is_acceptable_song,
+    transpose,
+    encode_song,
+    ACCEPTABLE_DURATIONS,
+    SEQUENCE_LENGTH,
+)
+
+
+def load_song(file_path):
+    song = m21.converter.parse(file_path)
+    return song
 
 
 def process_midi_file(file_path):
     try:
+        print("Processing file: ", file_path)
         file_name = file_path.split("/")[-1]
-        # copy the file to the output folder
-        with open(file_path, "rb") as f:
-            with open(f"midi_files_output/{file_name}", "wb") as f2:
-                f2.write(f.read())
+        song = load_song(file_path)
+        if is_acceptable_song(song, ACCEPTABLE_DURATIONS):
+            song = transpose(song)
+            encoded_song = encode_song(song)
+            mg = MelodyGenerator()
+            melody = mg.generate_melody(
+                seed=encoded_song,
+                num_steps=500,
+                # max_sequence_length=SEQUENCE_LENGTH,
+                max_sequence_length=256,
+                temperature=0.5,
+            )
+            mg.save_melody(melody, filename="midi_files_output/" + file_name)
         status = "success"
     except Exception as e:
+        print(e)
         status = "error"
     return status
 
@@ -23,7 +48,7 @@ def delete_midi_files(file_name):
         os.remove(f"midi_files/{file_name}")
         os.remove(f"midi_files_output/{file_name}")
     except Exception as e:
-        print(error)
+        print(e)
         pass
 
 

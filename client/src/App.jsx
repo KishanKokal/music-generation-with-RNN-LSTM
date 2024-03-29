@@ -4,8 +4,8 @@ import Loader from "./components/Loader";
 import { useState } from "react";
 
 function App() {
-  const [upload, setUpload] = useState(false);
-  const [download, setDownload] = useState(true);
+  const [upload, setUpload] = useState(true);
+  const [download, setDownload] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (

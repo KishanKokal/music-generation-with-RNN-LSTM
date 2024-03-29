@@ -10,7 +10,6 @@ class MelodyGenerator:
 
         self.model_path = model_path
         self.model = keras.models.load_model(model_path)
-        print(self.model.summary())
 
         with open(MAPPING_PATH, "r") as fp:
             self._mappings = json.load(fp)
