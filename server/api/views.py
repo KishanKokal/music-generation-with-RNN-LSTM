@@ -63,6 +63,7 @@ def upload_file(request):
         f.write(file.read())
 
     status = process_midi_file(f"midi_files/{file.name}")
+    
     if status == "error":
         delete_midi_files(file.name)
         return Response({"message": "An error occurred"}, status=500)
