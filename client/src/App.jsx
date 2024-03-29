@@ -32,17 +32,16 @@ function App() {
     };
     try {
       response = await axios.post(url, formData, config);
+      const blob = new Blob([response.data], { type: "audio/midi" });
+      setFile(blob);
+      setUpload(false);
+      setDownload(true);
+      setLoading(false);
     } catch (error) {
       setUpload(true);
       setDownload(false);
       setLoading(false);
-      return;
     }
-    const blob = new Blob([response.data], { type: "audio/midi" });
-    setFile(blob);
-    setUpload(false);
-    setDownload(true);
-    setLoading(false);
   };
 
   const handleDownload = () => {
