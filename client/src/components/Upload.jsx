@@ -1,5 +1,5 @@
 import "./Upload.css";
-function Upload() {
+function Upload({ handleChange }) {
   return (
     <div>
       <label htmlFor="file" className="custum-file-upload">
@@ -25,7 +25,7 @@ function Upload() {
         <div className="text">
           <span>Click here or drag and drop to upload midi file</span>
         </div>
-        <input id="file" type="file" />
+        <input id="file" type="file" onChange={handleChange} />
       </label>
     </div>
   );
