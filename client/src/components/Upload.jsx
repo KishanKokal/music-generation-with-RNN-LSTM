@@ -23,7 +23,7 @@ function Upload({ handleChange }) {
           </svg>
         </div>
         <div className="text">
-          <span>Click here or drag and drop to upload midi file</span>
+          <span>Click here to upload a midi file</span>
         </div>
         <input id="file" type="file" onChange={handleChange} />
       </label>
