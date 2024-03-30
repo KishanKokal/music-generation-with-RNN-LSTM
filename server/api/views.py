@@ -36,6 +36,7 @@ def process_midi_file(file_path):
                 temperature=0.5,
             )
             mg.save_melody(melody, filename="midi_files_output/" + file_name)
+
         status = "success"
     except Exception as e:
         print(e)
@@ -63,7 +64,7 @@ def upload_file(request):
         f.write(file.read())
 
     status = process_midi_file(f"midi_files/{file.name}")
-    
+
     if status == "error":
         delete_midi_files(file.name)
         return Response({"message": "An error occurred"}, status=500)
