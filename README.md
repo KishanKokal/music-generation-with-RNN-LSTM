@@ -7,9 +7,9 @@
 1. cd into the server folder
    `cd server`
 2. build the docker image
-   `docker build -t rhythm-genius`
+   `docker build -t rhythm-genius .`
 3. run the docker image
-   `docker run --init -it -p 8000:8000 rhythm-genius`
+   `docker run -d -p 8000:8000 rhythm-genius`
 
 - client application
 
