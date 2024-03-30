@@ -91,8 +91,8 @@ function App() {
       )}
       {download && (
         <section className="download">
-          <h1>The music is generated successfully ✅</h1>
-          <h2>Click the button below to download the generated music</h2>
+          <h1>Your melody is generated successfully ✅</h1>
+          <h2>Click the button below to download the generated melody</h2>
           <button className="btn" onClick={handleDownload}>
             Download
           </button>
