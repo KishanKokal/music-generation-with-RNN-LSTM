@@ -4,12 +4,15 @@ import Loader from "./components/Loader";
 import { useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { Alert, AlertTitle, IconButton, Collapse } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 function App() {
   const [upload, setUpload] = useState(true);
   const [download, setDownload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -38,6 +41,10 @@ function App() {
       setDownload(true);
       setLoading(false);
     } catch (error) {
+      setOpen(true);
+      setTimeout(() => {
+        setOpen(false);
+      }, 5000);
       setUpload(true);
       setDownload(false);
       setLoading(false);
@@ -58,6 +65,28 @@ function App() {
   return (
     <>
       <header>
+        <Collapse in={open} className="collapse">
+          <Alert
+            severity="error"
+            className="alert"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            <AlertTitle>Error processing the file</AlertTitle>
+            Please try again with a different file (make sure it is a .mid file)
+          </Alert>
+        </Collapse>
         <h1
           onClick={() => {
             setUpload(true);

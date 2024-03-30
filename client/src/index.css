@@ -145,6 +145,16 @@ header {
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  position: relative;
+}
+
+header .collapse {
+  position: absolute;
+  top: 128px;
+}
+
+.collapse .alert {
+  background-color: red;
 }
 
 header h1 {
