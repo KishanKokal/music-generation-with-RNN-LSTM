@@ -34,6 +34,7 @@ function App() {
       },
       responseType: "arraybuffer",
     };
+    
     try {
       response = await axios.post(url, formData, config);
       const blob = new Blob([response.data], { type: "audio/midi" });
