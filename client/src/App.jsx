@@ -24,7 +24,8 @@ function App() {
     setUpload(false);
     setDownload(false);
     setLoading(true);
-    const url = "http://localhost:8000/api/upload_file";
+    const url =
+      "https://music-generation-with-rnn-lstm.onrender.com/api/upload_file";
     const formData = new FormData();
     formData.append("file", file);
     const config = {
